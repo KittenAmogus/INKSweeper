@@ -1,3 +1,7 @@
+#include "cell.h"
+#include "config.h"
+#include "images.h"
+
 #include "inkview.h"
 
 // InkPad entry
