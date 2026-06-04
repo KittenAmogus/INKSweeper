@@ -6,39 +6,43 @@
 #include "inkview.h"
 
 
+inline void drawBlock(Game *game, uint8_t x, uint8_t y) {
+  Cell *cell = GET_CELL(game, x, y);
+  uint32_t col;
+
+  if (cell->isOpen) {
+    if (cell->isMine)
+      col = BLACK;
+    else if (cell->nearMines == 0)
+      col = LGRAY;
+    else
+      col = LGRAY;
+  } else {
+    if (cell->flagged)
+      col = WHITE;
+    else
+      col = DGRAY;
+  }
+
+  FillArea(
+    OFFSET_BORDERS + (x * game->cellW),
+    OFFSET_TOP + (y * game->cellH),
+    game->cellW, game->cellH,
+    col);
+
+  DrawRect(
+    OFFSET_BORDERS + (x * game->cellW),
+    OFFSET_TOP + (y * game->cellH),
+    game->cellW, game->cellH,
+    BLACK);
+}
+
+
 void drawFull(Game *game) {
 for (uint8_t y=0; y<game->fieldH; ++y) {
   for (uint8_t x=0; x<game->fieldW; ++x) {
-    uint32_t col;
-
-    Cell *cell = GET_CELL(game, x, y);
-
-    if (cell->isOpen) {
-      if (cell->isMine)
-        col = BLACK;
-      else if (cell->nearMines == 0)
-        col = LGRAY;
-      else
-        col = LGRAY;
-    } else {
-      if (cell->flagged)
-        col = WHITE;
-      else
-        col = DGRAY;
-    }
-
-    FillArea(
-      OFFSET_BORDERS + (x * game->cellW),
-      OFFSET_TOP + (y * game->cellH),
-      game->cellW, game->cellH,
-      col);
-
-    DrawRect(
-      OFFSET_BORDERS + (x * game->cellW),
-      OFFSET_TOP + (y * game->cellH),
-      game->cellW, game->cellH,
-      BLACK);
-
+    
+    drawBlock(game, x, y);
     PartialUpdate(
       OFFSET_BORDERS + (x * game->cellW),
       OFFSET_TOP + (y * game->cellH),
@@ -55,36 +59,7 @@ void drawPart(Game *game) {
       if (BIT_TEST(game, GET_IDX(game, x, y))) {
         BIT_CLEAR(game, GET_IDX(game, x, y));
 
-        uint32_t col;
-
-        Cell *cell = GET_CELL(game, x, y);
-
-        if (cell->isOpen) {
-          if (cell->isMine)
-            col = BLACK;
-          else if (cell->nearMines == 0)
-            col = LGRAY;
-          else
-            col = LGRAY;
-        } else {
-          if (cell->flagged)
-            col = WHITE;
-          else
-            col = DGRAY;
-        }
-
-        FillArea(
-          OFFSET_BORDERS + (x * game->cellW),
-          OFFSET_TOP + (y * game->cellH),
-          game->cellW, game->cellH,
-          col);
-
-        DrawRect(
-          OFFSET_BORDERS + (x * game->cellW),
-          OFFSET_TOP + (y * game->cellH),
-          game->cellW, game->cellH,
-          BLACK);
-
+        drawBlock(game, x, y);
         PartialUpdate(
           OFFSET_BORDERS + (x * game->cellW),
           OFFSET_TOP + (y * game->cellH),
