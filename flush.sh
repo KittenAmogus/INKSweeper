@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-export INKPAD_DISK=/dev/sda
-
 # Wait for InkPad
 echo "-- Waiting for '$INKPAD_DISK'..."
 while [ ! -e "$INKPAD_DISK" ]; do
