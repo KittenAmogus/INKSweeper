@@ -24,6 +24,8 @@ BLDDIR  = build
 SRC_INNER = $(shell find $(SRCDIR) -mindepth 1 -type d)
 BLD_INNER = $(patsubst $(SRCDIR)/%,$(BLDDIR)/%,$(SRC_INNER))
 
+SRC_INCLUDE = $(patsubst %,-I%,$(SRC_INNER))
+
 # Source files autosearch
 SOURCES = $(shell find $(SRCDIR) -name '*.c')
 OBJECTS = $(patsubst $(SRCDIR)/%,$(BLDDIR)/%.o,$(SOURCES))
@@ -42,7 +44,7 @@ $(TARGET): $(OBJECTS)
 $(BLDDIR)/%.c.o: $(SRCDIR)/%.c
 	@echo "-- Compiling $< -> $@"
 	@mkdir -p $(BLDDIR) $(BLD_INNER)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(SRC_INCLUDE) -c $< -o $@
 
 # Cleaning
 clean:
